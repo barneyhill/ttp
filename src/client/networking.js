@@ -1,5 +1,3 @@
-// Learn more about this file at:
-// https://victorzhou.com/blog/build-an-io-game-part-1/#4-client-networking
 import io from 'socket.io-client';
 import { throttle } from 'throttle-debounce';
 import { processGameUpdate } from './state';
@@ -17,7 +15,7 @@ const connectedPromise = new Promise(resolve => {
 
 export const connect = onGameOver => (
   connectedPromise.then(() => {
-    // Register callbacks
+
     socket.on(Constants.MSG_TYPES.GAME_UPDATE, processGameUpdate);
     socket.on(Constants.MSG_TYPES.GAME_OVER, onGameOver);
     socket.on('disconnect', () => {
@@ -34,6 +32,6 @@ export const play = username => {
   socket.emit(Constants.MSG_TYPES.JOIN_GAME, username);
 };
 
-export const updateDirection = throttle(20, dir => {
-  socket.emit(Constants.MSG_TYPES.INPUT, dir);
-});
+export const sendKeys = keys => {
+  socket.emit(Constants.MSG_TYPES.KEYS, keys);
+}

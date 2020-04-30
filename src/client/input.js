@@ -1,31 +1,47 @@
-// Learn more about this file at:
-// https://victorzhou.com/blog/build-an-io-game-part-1/#6-client-input-%EF%B8%8F
-import { updateDirection } from './networking';
+import { sendKeys } from './networking';
 
-function onMouseInput(e) {
-  handleInput(e.clientX, e.clientY);
+var keyStates = {
+    up: false,
+    down: false,
+    left: false,
+    right: false,
+    space: false
 }
 
-function onTouchInput(e) {
-  const touch = e.touches[0];
-  handleInput(touch.clientX, touch.clientY);
+function handleInput(key) {
+  if (key.code == "ArrowLeft") updateDirection(-Math.PI * 0.05);
+  else if (key.code == 'ArrowRight') updateDirection(Math.PI * 0.05);
+  if (key.code == 'ArrowUp') setAcceleration(1);
+  else if (key.code == 'ArrowDown') setAcceleration(-1);
 }
 
-function handleInput(x, y) {
-  const dir = Math.atan2(x - window.innerWidth / 2, window.innerHeight / 2 - y);
-  updateDirection(dir);
+function updateKeyStates(code, value) {
+    if(code == 68 || code == 39)  
+        keyStates.right = value;
+    else if(code == 83 || code == 40)
+        keyStates.down = value;
+    else if(code == 65 || code == 37) 
+        keyStates.left = value;
+    else if(code == 87 || code == 38)
+        keyStates.up = value;
+    else if (code == 32)
+        keyStates.space = value;
+
+    sendKeys(keyStates);
 }
 
 export function startCapturingInput() {
-  window.addEventListener('mousemove', onMouseInput);
-  window.addEventListener('click', onMouseInput);
-  window.addEventListener('touchstart', onTouchInput);
-  window.addEventListener('touchmove', onTouchInput);
+  window.addEventListener('keydown', function(event) {
+    console.log(`Pressed: ${event.which}`); 
+    updateKeyStates(event.which, true);
+  });
+  window.addEventListener('keyup', function(event) {
+    console.log(`Released: ${event.which}`);
+    updateKeyStates(event.which, false);
+  });
 }
 
 export function stopCapturingInput() {
-  window.removeEventListener('mousemove', onMouseInput);
-  window.removeEventListener('click', onMouseInput);
-  window.removeEventListener('touchstart', onTouchInput);
-  window.removeEventListener('touchmove', onTouchInput);
+  window.removeEventListener('keydown', event);
+  window.removeEventListener('keyup', event);
 }

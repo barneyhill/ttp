@@ -26,13 +26,14 @@ class Game {
     delete this.players[socket.id];
   }
 
-  handleInput(socket, dir) {
+  updateInput(socket, keys) {
     if (this.players[socket.id]) {
-      this.players[socket.id].setDirection(dir);
+      this.players[socket.id].updateInput(keys);
     }
   }
 
   update() {
+    
     // Calculate time elapsed
     const now = Date.now();
     const dt = (now - this.lastUpdateTime) / 1000;

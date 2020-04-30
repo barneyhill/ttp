@@ -1,21 +1,16 @@
-// Learn more about this file at:
-// https://victorzhou.com/blog/build-an-io-game-part-1/#5-client-rendering
 import { debounce } from 'throttle-debounce';
 import { getAsset } from './assets';
 import { getCurrentState } from './state';
-
+ 
 const Constants = require('../shared/constants');
 
 const { PLAYER_RADIUS, PLAYER_MAX_HP, BULLET_RADIUS, MAP_SIZE } = Constants;
 
-// Get the canvas graphics context
 const canvas = document.getElementById('game-canvas');
 const context = canvas.getContext('2d');
 setCanvasDimensions();
 
 function setCanvasDimensions() {
-  // On small screens (e.g. phones), we want to "zoom out" so players can still see at least
-  // 800 in-game units of width.
   const scaleRatio = Math.max(1, 800 / window.innerWidth);
   canvas.width = scaleRatio * window.innerWidth;
   canvas.height = scaleRatio * window.innerHeight;
@@ -48,32 +43,25 @@ function render() {
 function renderBackground(x, y) {
   const backgroundX = MAP_SIZE / 2 - x + canvas.width / 2;
   const backgroundY = MAP_SIZE / 2 - y + canvas.height / 2;
-  const backgroundGradient = context.createRadialGradient(
-    backgroundX,
-    backgroundY,
-    MAP_SIZE / 10,
-    backgroundX,
-    backgroundY,
-    MAP_SIZE / 2,
-  );
-  backgroundGradient.addColorStop(0, 'black');
-  backgroundGradient.addColorStop(1, 'gray');
-  context.fillStyle = backgroundGradient;
+  context.fillStyle = "gray";
+
   context.fillRect(0, 0, canvas.width, canvas.height);
 }
 
-// Renders a ship at the given coordinates
 function renderPlayer(me, player) {
   const { x, y, direction } = player;
   const canvasX = canvas.width / 2 + x - me.x;
   const canvasY = canvas.height / 2 + y - me.y;
 
-  // Draw ship
   context.save();
   context.translate(canvasX, canvasY);
   context.rotate(direction);
+
+  var hash = player.username.charCodeAt(0) % 5
+  var tank = ['redtank.svg', 'greentank.svg', 'bluetank.svg', 'yellowtank.svg', 'pinktank.svg'][hash]
+
   context.drawImage(
-    getAsset('ship.svg'),
+    getAsset(tank),
     -PLAYER_RADIUS,
     -PLAYER_RADIUS,
     PLAYER_RADIUS * 2,
@@ -96,6 +84,11 @@ function renderPlayer(me, player) {
     PLAYER_RADIUS * 2 * (1 - player.hp / PLAYER_MAX_HP),
     2,
   );
+
+  context.fillStyle = 'white';
+  context.font = "20px Arial";
+
+  context.fillText(player.username.slice(0, -3), canvasX - 75/4, canvasY + 50);
 }
 
 function renderBullet(me, bullet) {
