@@ -20,8 +20,9 @@ class Player extends ObjectClass {
   }
 
   // Returns a newly created bullet, or null.
-  update(dt) {
-    super.update(dt);
+  update(dt, walls) {
+
+    super.update(dt, walls);
 
     if (this.speed > 0)
       this.speed -= Constants.PLAYER_SPEED / 5;
@@ -40,17 +41,18 @@ class Player extends ObjectClass {
     // Update score
     this.score += dt * Constants.SCORE_PER_SECOND;
 
-    // Make sure the player stays in bounds
-    this.x = Math.max(0, Math.min(Constants.MAP_SIZE, this.x));
-    this.y = Math.max(0, Math.min(Constants.MAP_SIZE, this.y));
-
     // Fire a bullet, if needed
     this.fireCooldown -= dt;
+
+    if (this.fireCooldown < 0)
+      this.fireCooldown = 0;
     if (this.fireCooldown <= 0 && this.fire) {
-      this.fireCooldown += Constants.PLAYER_FIRE_COOLDOWN;
+      this.fireCooldown += Constants.PLAYER_FIRE_COOLDOWN / 5;
       this.fire = false;
       return new Bullet(this.id, this.x, this.y, this.direction);
     }
+
+    this.collide = false;
 
     return null;
   }

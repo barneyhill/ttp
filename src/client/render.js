@@ -19,7 +19,7 @@ function setCanvasDimensions() {
 window.addEventListener('resize', debounce(40, setCanvasDimensions));
 
 function render() {
-  const { me, others, bullets } = getCurrentState();
+  const { me, others, bullets, maze } = getCurrentState();
   if (!me) {
     return;
   }
@@ -37,7 +37,15 @@ function render() {
 
   // Draw all players
   renderPlayer(me, me);
+  renderMaze(maze, me.x, me.y);
   others.forEach(renderPlayer.bind(null, me));
+}
+
+function renderMaze(maze, x, y){
+  console.log(maze);
+  maze.forEach(rect => {
+    context.fillRect(rect['x'] - x + canvas.width/2, rect['y'] - y+canvas.height/2, rect['width'], rect['height']);
+  });
 }
 
 function renderBackground(x, y) {
@@ -88,7 +96,7 @@ function renderPlayer(me, player) {
   context.fillStyle = 'white';
   context.font = "20px Arial";
 
-  context.fillText(player.username.slice(0, -3), canvasX - 75/4, canvasY + 50);
+  context.fillText(player.username.slice(0, -3), canvasX - PLAYER_RADIUS, canvasY + PLAYER_RADIUS*2);
 }
 
 function renderBullet(me, bullet) {
