@@ -3,7 +3,7 @@
     Tank Trouble PRO
 </h1>
 
-Built with [Node.js](https://nodejs.org/), [socket.io](https://socket.io/), and [HTML5 Canvas](https://www.w3schools.com/html/html5_canvas.asp).
+Built with [Node.js](https://nodejs.org/), [socket.io](https://socket.io/), and [HTML5 Canvas](https://www.w3schools.com/html/html5_canvas.asp) and [example-.io-game](https://github.com/vzhou842/example-.io-game)
 
 ## Development
 
